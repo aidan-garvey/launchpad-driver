@@ -39,6 +39,10 @@ class Driver:
             print("Error: could not find MIDI device")
             exit()
 
+        # set launchpad layout to user 1 / drum rack
+        layoutmsg = mido.Message.from_bytes([0xF0, 0x0, 0x20, 0x29, 0x02, 0x18, 0x22, 0x01, 0xF7])
+        self.midiport.send(layoutmsg)
+
         self.audiodev = -1
         num_outs = self.audio.get_device_count()
         for i in range(num_outs):
@@ -60,14 +64,10 @@ class Driver:
 
     def run(self):
         self.online = True
-        self.midiport.callback = self.callback
         while self.online:
-            sleep(1)
-
-    def callback(self, message):
-        print(message)
-        if message.type == 'note_on':
-            self.stream.play(message.note)
+            msg = self.midiport.receive()
+            if message.type == 'note_on':
+                self.stream.play(message.note)
 
     def shut_down(self):
         self.midiport.close()
