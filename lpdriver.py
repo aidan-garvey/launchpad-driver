@@ -48,6 +48,12 @@ class Driver:
 
         self.stream = SampleStream(self.audio, self.audiodev)
 
+    def run(self):
+        pass
+
+    def shut_down(self):
+        pass
+
 
 if __name__ == "__main__":
     mido.set_backend(BACKEND)
