@@ -20,10 +20,7 @@ class Driver:
 
     stream: SampleStream
 
-    online: bool
-
     def __init__(self):
-        self.online = True
         self.midiport = None
 
         print('\n' * 40)
@@ -32,7 +29,7 @@ class Driver:
         for dev in devs:
             if dev.find(CONFIG['midi_device']) >= 0:
                 self.midiport = mido.open_ioport(dev)
-                print("Using midi device", dev)
+                print("Using MIDI device", dev)
                 break
         
         if self.midiport is None:
@@ -63,11 +60,13 @@ class Driver:
             self.stream.add(i + LP_NOTES_START, samples[i])
 
     def run(self):
-        self.online = True
-        while self.online:
-            message = self.midiport.receive()
-            if message.type == 'note_on':
-                self.stream.play(message.note)
+        try:
+            while True:
+                message = self.midiport.receive()
+                if message.type == 'note_on':
+                    self.stream.play(message.note)
+        except KeyboardInterrupt as kbdint:
+            pass
 
     def shut_down(self):
         # flush MIDI input messages
