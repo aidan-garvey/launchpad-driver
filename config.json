@@ -1,0 +1,8 @@
+{
+    "audio_device":"T-8",
+    "midi_device":"Launchpad",
+    "samples": [
+        "rhythm/kick-1.wav",
+        "scratches/beat_up.wav"
+    ]
+}
