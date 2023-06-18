@@ -26,10 +26,13 @@ class Driver:
         self.online = True
         self.midiport = None
 
+        print('\n' * 40)
+
         devs: list[str] = mido.get_output_names()
         for dev in devs:
             if dev.find(CONFIG['midi_device']) >= 0:
                 self.midiport = mido.open_ioport(dev)
+                print("Using midi device", dev)
                 break
         
         if self.midiport is None:
@@ -42,6 +45,7 @@ class Driver:
             name = self.audio.get_device_info_by_index(i)['name']
             if name.find(CONFIG['audio_device']) >= 0:
                 self.audiodev = i
+                print("Using audio device", name)
                 break
         
         if self.audiodev < 0:
@@ -61,6 +65,7 @@ class Driver:
             sleep(1)
 
     def callback(self, message):
+        print(message)
         if message.type == 'note_on':
             self.stream.play(message.note)
 
