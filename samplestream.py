@@ -55,8 +55,9 @@ class SampleStream:
     # add the given sample to the ones being played in the callback function
     def play(self, num):
         sf = self.samples.get(num)
-        sf.rewind()
-        self.queue.add(sf)
+        if sf is not None:
+            sf.rewind()
+            self.queue.add(sf)
 
     # Called by self.stream whenever more frames of audio output are needed.
     # It combines all samples currently being played by adding their waveform

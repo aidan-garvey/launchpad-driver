@@ -65,7 +65,7 @@ class Driver:
     def run(self):
         self.online = True
         while self.online:
-            msg = self.midiport.receive()
+            message = self.midiport.receive()
             if message.type == 'note_on':
                 self.stream.play(message.note)
 
