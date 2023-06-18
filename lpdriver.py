@@ -70,6 +70,9 @@ class Driver:
                 self.stream.play(message.note)
 
     def shut_down(self):
+        # flush MIDI input messages
+        while self.midiport.poll() is not None:
+            pass
         self.midiport.close()
         self.audio.terminate()
 
