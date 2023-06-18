@@ -58,12 +58,13 @@ class Driver:
         samples = CONFIG['samples']
         for i in range(len(samples)):
             self.stream.add(i + LP_NOTES_START, samples[i])
+            self.midiport.send(mido.Message('note_on', note = i + LP_NOTES_START, velocity = 0))
 
     def run(self):
         try:
             while True:
                 message = self.midiport.receive()
-                if message.type == 'note_on':
+                if message.type == 'note_on' and message.velocity > 0:
                     self.stream.play(message.note)
         except KeyboardInterrupt as kbdint:
             pass
