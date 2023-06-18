@@ -49,7 +49,7 @@ class SampleStream:
         self.samples = dict()
 
     # open a sample file and map it to the given note number
-    def add(num, filename):
+    def add(self, num, filename):
         self.samples[num] = wave.open('samples/' + filename, 'rb')
 
     # add the given sample to the ones being played in the callback function

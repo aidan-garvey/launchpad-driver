@@ -5,9 +5,11 @@ import json
 import mido
 from pyaudio import PyAudio
 from samplestream import SampleStream
+from time import sleep
 
 BACKEND = 'mido.backends.rtmidi'
 CONFIG: dict = json.loads(open('config.json', 'r').read())
+LP_NOTES_START = 0x24
 
 class Driver:
     audio = PyAudio()
@@ -48,12 +50,23 @@ class Driver:
 
         self.stream = SampleStream(self.audio, self.audiodev)
 
+        samples = CONFIG['samples']
+        for i in range(len(samples)):
+            self.stream.add(i + LP_NOTES_START, samples[i])
+
     def run(self):
-        pass
+        self.online = True
+        self.midiport.callback = self.callback
+        while self.online:
+            sleep(1)
+
+    def callback(self, message):
+        if message.type == 'note_on':
+            self.stream.play(message.note)
 
     def shut_down(self):
-        pass
-
+        self.midiport.close()
+        self.audio.terminate()
 
 if __name__ == "__main__":
     mido.set_backend(BACKEND)
