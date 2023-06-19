@@ -66,11 +66,10 @@ class Driver:
         self.stream = SampleStream(self.audio, self.audiodev)
 
         self.colormap = dict()
-        samples = CONFIG['samples']
-        for path, note_val in range(len(samples)):
-            sample_dir = sample[:path.rfind('/')]
+        for path, note_val in CONFIG['samples'].items():
+            sample_dir = path[:path.rfind('/')]
             self.stream.add(note_val, path)
-            self.colormap.add(note_val, CONFIG['dir_colors'][sample_dir])
+            self.colormap[note_val] = CONFIG['dir_colors'][sample_dir]
             self.midiport.send(mido.Message('note_on', channel=CHANNEL, note=note_val, velocity=self.colormap[note_val]))
 
     def run(self):
