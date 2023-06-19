@@ -15,7 +15,7 @@ HIT_COLOR = CONFIG['hit_color']
 EMPTY_COLOR = CONFIG['emtpy_color']
 
 def sysex_lightall(vel: int):
-    return [0xF0, 0x00, 0x20, 0x29, 0x02, 0x18, 0x0E, vel, 0xF7]
+    return mido.Message.from_bytes([0xF0, 0x00, 0x20, 0x29, 0x02, 0x18, 0x0E, vel, 0xF7])
 
 class Driver:
     audio = PyAudio()
@@ -89,6 +89,8 @@ class Driver:
         # flush MIDI input messages
         while self.midiport.poll() is not None:
             pass
+        # shut off all lights
+        self.midiport.send(sysex_lightall(0))
         self.midiport.close()
         self.audio.terminate()
 
