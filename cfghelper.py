@@ -10,7 +10,7 @@ CONFIG: dict = json.loads(open('config.json', 'r').read())
 
 def quit():
     # prompt to save changes
-    choice == ''
+    choice = ''
     while choice != 'Y' and choice != 'N':
         choice = input("Save changes? [Y/N]").upper()[:1]
     if choice == 'Y':
@@ -78,7 +78,7 @@ def menu_samples():
             curr = 1
             for path, _, files in os.walk('samples'):
                 for f in files:
-                    opts[curr] = os.path.join(path[:path.find(os.path.sep)], f)
+                    opts[curr] = os.path.join(path[path.find(os.path.sep) + 1:], f)
                     curr += 1
             choice = prompt(opts)
             if choice <= 0:
