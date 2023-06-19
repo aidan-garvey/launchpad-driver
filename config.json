@@ -2,8 +2,16 @@
     "audio_device":"T-8",
     "midi_device":"Launchpad",
     "midi_channel":5,
-    "samples": [
-        "rhythm/kick-1.wav",
-        "scratches/beat_up.wav"
-    ]
+    "empty_color":0,
+    "hit_color":56,
+    "samples": {
+        "rhythm/kick-1.wav":11,
+        "scratches/beat_up.wav":12
+    },
+    "dir_colors": {
+        "rhythm":9,
+        "scratches":16,
+        "t8":8,
+        "epmd":72
+    }
 }

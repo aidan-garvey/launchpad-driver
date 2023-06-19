@@ -11,6 +11,11 @@ BACKEND = 'mido.backends.rtmidi'
 CONFIG: dict = json.loads(open('config.json', 'r').read())
 LP_NOTES_START = 0x24
 CHANNEL = CONFIG['midi_channel']
+HIT_COLOR = CONFIG['hit_color']
+EMPTY_COLOR = CONFIG['emtpy_color']
+
+def sysex_lightall(vel: int):
+    return [0xF0, 0x00, 0x20, 0x29, 0x02, 0x18, 0x0E, vel, 0xF7]
 
 class Driver:
     audio = PyAudio()
@@ -18,6 +23,8 @@ class Driver:
     midiport: mido.ports.BaseIOPort
     # audio device number
     audiodev: int
+    # map of notes (button IDs) to velocities (colors)
+    colormap: dict[int, int]
 
     stream: SampleStream
 
@@ -40,6 +47,8 @@ class Driver:
         # set launchpad layout to user 1 / drum rack
         layoutmsg = mido.Message.from_bytes([0xF0, 0x00, 0x20, 0x29, 0x02, 0x18, 0x22, 0x01, 0xF7])
         self.midiport.send(layoutmsg)
+        # change all lights to the "empty" color
+        self.midiport.send(sysex_lightall(EMPTY_COLOR))
 
         self.audiodev = -1
         num_outs = self.audio.get_device_count()
@@ -56,11 +65,13 @@ class Driver:
 
         self.stream = SampleStream(self.audio, self.audiodev)
 
+        self.colormap = dict()
         samples = CONFIG['samples']
-        for i in range(len(samples)):
-            note_val = i + LP_NOTES_START
-            self.stream.add(note_val, samples[i])
-            self.midiport.send(mido.Message('note_on', channel=CHANNEL, note=note_val, velocity=40))
+        for path, note_val in range(len(samples)):
+            sample_dir = sample[:path.rfind('/')]
+            self.stream.add(note_val, path)
+            self.colormap.add(note_val, CONFIG['dir_colors'][sample_dir])
+            self.midiport.send(mido.Message('note_on', channel=CHANNEL, note=note_val, velocity=self.colormap[note_val]))
 
     def run(self):
         try:
@@ -68,9 +79,9 @@ class Driver:
                 message = self.midiport.receive()
                 if message.type == 'note_on' and message.velocity > 0:
                     self.stream.play(message.note)
-                    self.midiport.send(mido.Message('note_on', channel=CHANNEL, note=message.note, velocity=56))
+                    self.midiport.send(mido.Message('note_on', channel=CHANNEL, note=message.note, velocity=HIT_COLOR))
                 elif message.type == 'note_on':
-                    self.midiport.send(mido.Message('note_on', channel=CHANNEL, note=message.note, velocity=40))
+                    self.midiport.send(mido.Message('note_on', channel=CHANNEL, note=message.note, velocity=self.colormap.get(message.note, EMPTY_COLOR)))
         except KeyboardInterrupt as kbdint:
             pass
 
