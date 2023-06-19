@@ -37,7 +37,7 @@ class Driver:
             exit()
 
         # set launchpad layout to user 1 / drum rack
-        layoutmsg = mido.Message.from_bytes([0xF0, 0x0, 0x20, 0x29, 0x02, 0x18, 0x22, 0x01, 0xF7])
+        layoutmsg = mido.Message.from_bytes([0xF0, 0x00, 0x20, 0x29, 0x02, 0x18, 0x22, 0x01, 0xF7])
         self.midiport.send(layoutmsg)
 
         self.audiodev = -1
@@ -57,8 +57,9 @@ class Driver:
 
         samples = CONFIG['samples']
         for i in range(len(samples)):
-            self.stream.add(i + LP_NOTES_START, samples[i])
-            self.midiport.send(mido.Message('note_on', note = i + LP_NOTES_START, velocity = 0))
+            note_val = i + LP_NOTES_START
+            self.stream.add(note_val, samples[i])
+            self.midiport.send(mido.Message('note_on', note=note_val, velocity=40))
 
     def run(self):
         try:
@@ -66,6 +67,9 @@ class Driver:
                 message = self.midiport.receive()
                 if message.type == 'note_on' and message.velocity > 0:
                     self.stream.play(message.note)
+                    self.midiport.send(mido.Message('note_on', note=message.note, velocity=56))
+                elif message.type == 'note_on':
+                    self.midiport.send(mido.Message('note_on', note=message.note, velocity=40))
         except KeyboardInterrupt as kbdint:
             pass
 
