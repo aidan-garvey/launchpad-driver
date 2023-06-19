@@ -32,6 +32,7 @@ class Driver:
         self.midiport = None
 
         print('\n' * 40)
+        print('lpdriver.py\n')
 
         devs: list[str] = mido.get_output_names()
         for dev in devs:
@@ -62,6 +63,8 @@ class Driver:
         if self.audiodev < 0:
             print("Error: could not find audio output device")
             exit()
+
+        print('\nPress CTRL+C to quit')
 
         self.stream = SampleStream(self.audio, self.audiodev)
 
