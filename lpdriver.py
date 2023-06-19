@@ -12,7 +12,7 @@ CONFIG: dict = json.loads(open('config.json', 'r').read())
 LP_NOTES_START = 0x24
 CHANNEL = CONFIG['midi_channel']
 HIT_COLOR = CONFIG['hit_color']
-EMPTY_COLOR = CONFIG['emtpy_color']
+EMPTY_COLOR = CONFIG['empty_color']
 
 def sysex_lightall(vel: int):
     return mido.Message.from_bytes([0xF0, 0x00, 0x20, 0x29, 0x02, 0x18, 0x0E, vel, 0xF7])
