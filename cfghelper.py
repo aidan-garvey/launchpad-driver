@@ -8,6 +8,16 @@ from pyaudio import PyAudio
 
 CONFIG: dict = json.loads(open('config.json', 'r').read())
 
+def quit():
+    # prompt to save changes
+    choice == ''
+    while choice != 'Y' and choice != 'N':
+        choice = input("Save changes? [Y/N]").upper()[:1]
+    if choice == 'Y':
+        f = open('config.json', 'w')
+        f.write(json.dumps(CONFIG))
+    exit(0)
+
 def prompt(opts: dict[int, str]) -> int:
     print("\nEnter one of the following options:")
     for num, desc in opts.items():
@@ -32,7 +42,7 @@ def cfg_midi_dev():
         CONFIG['midi_device'] = opts[choice]
         print(f'Using MIDI device: {CONFIG["midi_device"]}')
     elif choice == 0:
-        exit()
+        quit()
 
 def cfg_audio_dev():
     audio = PyAudio()
@@ -45,7 +55,7 @@ def cfg_audio_dev():
         CONFIG['audio_device'] = opts[choice]
         print(f'Using audio device: {CONFIG["audio_device"]}')
     elif choice == 0:
-        exit()
+        quit()
 
 def cfg_midi_channel():
     channel = 0
@@ -66,13 +76,13 @@ def menu_samples():
             midiport.send(mido.Message('note_on', channel=message.channel, note=message.note, velocity=12))
             opts = dict()
             curr = 1
-            for path, _, files in os.walk('.'):
+            for path, _, files in os.walk('samples'):
                 for f in files:
-                    opts[curr] = os.path.join(path, f)
+                    opts[curr] = os.path.join(path[:path.find(os.path.sep)], f)
                     curr += 1
             choice = prompt(opts)
             if choice <= 0:
-                exit()
+                quit()
             
             name = opts[choice]
             dirname = name[:name.rfind(os.path.sep)]
@@ -99,7 +109,7 @@ if __name__ == "__main__":
                      2: 'choose a different MIDI controller'})
     
     if choice == 0:
-        exit()
+        quit()
     elif choice == 2:
         cfg_midi_dev()
 
@@ -107,14 +117,14 @@ if __name__ == "__main__":
                      2: 'choose a different audio device'})
 
     if choice == 0:
-        exit()
+        quit()
     elif choice == 2:
         cfg_audio_dev()
 
     choice = prompt({1: f'use saved MIDI channel ({CONFIG["midi_channel"] + 1})',
                      2: 'choose another channel'})
     if choice == 0:
-        exit()
+        quit()
     elif choice == 2:
         cfg_midi_channel()
 
