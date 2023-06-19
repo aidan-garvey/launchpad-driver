@@ -10,6 +10,7 @@ from time import sleep
 BACKEND = 'mido.backends.rtmidi'
 CONFIG: dict = json.loads(open('config.json', 'r').read())
 LP_NOTES_START = 0x24
+CHANNEL = CONFIG['midi_channel']
 
 class Driver:
     audio = PyAudio()
@@ -59,7 +60,7 @@ class Driver:
         for i in range(len(samples)):
             note_val = i + LP_NOTES_START
             self.stream.add(note_val, samples[i])
-            self.midiport.send(mido.Message('note_on', note=note_val, velocity=40))
+            self.midiport.send(mido.Message('note_on', channel=CHANNEL, note=note_val, velocity=40))
 
     def run(self):
         try:
@@ -67,9 +68,9 @@ class Driver:
                 message = self.midiport.receive()
                 if message.type == 'note_on' and message.velocity > 0:
                     self.stream.play(message.note)
-                    self.midiport.send(mido.Message('note_on', note=message.note, velocity=56))
+                    self.midiport.send(mido.Message('note_on', channel=CHANNEL, note=message.note, velocity=56))
                 elif message.type == 'note_on':
-                    self.midiport.send(mido.Message('note_on', note=message.note, velocity=40))
+                    self.midiport.send(mido.Message('note_on', channel=CHANNEL, note=message.note, velocity=40))
         except KeyboardInterrupt as kbdint:
             pass
 
