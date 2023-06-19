@@ -69,8 +69,8 @@ def cfg_midi_channel():
 
 def menu_samples():
     midiport = mido.open_ioport(CONFIG['midi_device'])
-    print("Press a button on the controller to assign a sample, press one of the arrow buttons to quit")
     while True:
+        print("Press a button on the controller to assign a sample, press one of the arrow buttons to quit")
         message = midiport.receive()
         if message.type == 'note_on' and message.velocity > 0:
             midiport.send(mido.Message('note_on', channel=message.channel, note=message.note, velocity=12))
@@ -134,3 +134,5 @@ if __name__ == "__main__":
             menu_samples()
         elif choice == 2:
             menu_colors()
+    
+    quit()
