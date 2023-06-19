@@ -3,6 +3,7 @@
 
 import json
 import mido
+import os
 from pyaudio import PyAudio
 
 CONFIG: dict = json.loads(open('config.json', 'r').read())
@@ -57,7 +58,32 @@ def cfg_midi_channel():
     print(f'Using MIDI channel {CONFIG["midi_channel"] + 1}')
 
 def menu_samples():
-    pass
+    midiport = mido.open_ioport(CONFIG['midi_device'])
+    print("Press a button on the controller to assign a sample, press one of the arrow buttons to quit")
+    while True:
+        message = midiport.receive()
+        if message.type == 'note_on' and message.velocity > 0:
+            midiport.send(mido.Message('note_on', channel=message.channel, note=message.note, velocity=12))
+            opts = dict()
+            curr = 1
+            for path, _, files in os.walk('.'):
+                for f in files:
+                    opts[curr] = os.path.join(path, f)
+                    curr += 1
+            choice = prompt(opts)
+            if choice <= 0:
+                exit()
+            
+            name = opts[choice]
+            dirname = name[:name.rfind(os.path.sep)]
+
+            print("Using", name, "from", dirname)
+
+            CONFIG['samples'][name] = message.note
+            midiport.send(mido.Message('note_on', channel=message.channel, note=message.note, velocity=CONFIG['dir_colors'].get(dirname, 40)))
+
+        elif message.is_cc():
+            break
 
 def menu_colors():
     pass

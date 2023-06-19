@@ -3,6 +3,7 @@
 
 import json
 import mido
+import os
 from pyaudio import PyAudio
 from samplestream import SampleStream
 from time import sleep
@@ -70,7 +71,7 @@ class Driver:
 
         self.colormap = dict()
         for path, note_val in CONFIG['samples'].items():
-            sample_dir = path[:path.rfind('/')]
+            sample_dir = path[:path.rfind(os.path.sep)]
             self.stream.add(note_val, path)
             self.colormap[note_val] = CONFIG['dir_colors'][sample_dir]
             self.midiport.send(mido.Message('note_on', channel=CHANNEL, note=note_val, velocity=self.colormap[note_val]))
