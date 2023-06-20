@@ -35,14 +35,15 @@ def quit():
         f = open('config.json', 'w')
         f.write(json.dumps(CONFIG))
     
-    # clear buttons
-    clear_all()
+    if midiport is not None:
+        # clear buttons
+        clear_all()
 
-    # flush MIDI inputs
-    while midiport.poll() is not None:
-        pass
+        # flush MIDI inputs
+        while midiport.poll() is not None:
+            pass
 
-    midiport.close()
+        midiport.close()
 
     exit(0)
 
