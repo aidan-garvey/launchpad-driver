@@ -1,17 +1,1 @@
-{
-    "audio_device":"T-8",
-    "midi_device":"Launchpad",
-    "midi_channel":5,
-    "empty_color":0,
-    "hit_color":56,
-    "samples": {
-        "36": "rhythm/kick-1.wav",
-        "37": "scratches/beat_up.wav"
-    },
-    "dir_colors": {
-        "rhythm":9,
-        "scratches":16,
-        "t8":8,
-        "epmd":72
-    }
-}
+{"audio_device": "T-8", "midi_device": "Launchpad MK2:Launchpad MK2 MIDI 1 20:0", "midi_channel": 5, "empty_color": 104, "hit_color": 13, "samples": {"36": "rhythm/rimshot-2.wav", "37": "rhythm/hihat-1.wav", "64": "scratches/beat_up.wav", "65": "scratches/beat_down.wav", "66": "scratches/beat_up_2.wav", "67": "scratches/beat_down_2.wav", "40": "t8/bass-drum.wav", "41": "t8/snare.wav", "42": "t8/hand-clap.wav", "43": "t8/c-hihat.wav", "72": "t8/m-hihat.wav", "73": "t8/o-hihat.wav", "44": "scratches/beat_up.wav", "45": "scratches/beat_down.wav", "46": "scratches/beat_up_2.wav", "47": "scratches/beat_down_2.wav", "48": "epmd/d-.wav", "49": "epmd/d-d-.wav", "50": "epmd/down.wav", "51": "epmd/blackout.wav", "80": "epmd/mic.wav", "81": "epmd/rock.wav"}, "dir_colors": {"rhythm": 60, "scratches": 87, "t8": 9, "epmd": 72}}

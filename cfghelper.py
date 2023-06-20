@@ -10,8 +10,9 @@ CONFIG: dict = json.loads(open('config.json', 'r').read())
 
 midiport = None
 
-def sysex_lightall(vel: int):
-    return mido.Message.from_bytes([0xF0, 0x00, 0x20, 0x29, 0x02, 0x18, 0x0E, vel, 0xF7])
+def clear_all():
+    for i in range(64):
+        midiport.send(mido.Message('note_on', channel=CONFIG['midi_channel'], note=i+36, velocity=0))
 
 def display_palette(palette: int):
     palette *= 64
@@ -35,7 +36,7 @@ def quit():
         f.write(json.dumps(CONFIG))
     
     # clear buttons
-    midiport.send(sysex_lightall(0))
+    clear_all()
 
     # flush MIDI inputs
     while midiport.poll() is not None:
@@ -91,6 +92,8 @@ def cfg_midi_channel():
     print(f'Using MIDI channel {CONFIG["midi_channel"] + 1}')
 
 def menu_samples():
+    clear_all()
+
     # initialize button colors, save a map of notes to samples (reverse of config)
     for note_val, path in CONFIG['samples'].items():
         sample_dir = path[:path.rfind(os.path.sep)]
@@ -139,6 +142,8 @@ def menu_samples():
         pass
 
 def menu_colors():
+    clear_all()
+
     opts = {1: "empty slots", 2: "pressed buttons"}
     curr = 3
     for d in get_dirs():
@@ -172,7 +177,7 @@ def menu_colors():
                     CONFIG['dir_colors'][opts[choice]] = color
                 break
         
-        sysex_lightall(0)
+        clear_all()
     
     # flush
     while midiport.poll() is not None:
@@ -221,5 +226,6 @@ if __name__ == "__main__":
             menu_samples()
         elif choice == 2:
             menu_colors()
+        clear_all()
     
     quit()
