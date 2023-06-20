@@ -13,6 +13,18 @@ midiport = None
 def sysex_lightall(vel: int):
     return mido.Message.from_bytes([0xF0, 0x00, 0x20, 0x29, 0x02, 0x18, 0x0E, vel, 0xF7])
 
+def display_palette(palette: int):
+    palette *= 64
+    for i in range(64):
+        midiport.send(mido.Message('note_on', channel=CONFIG['midi_channel'], note=i+36, velocity=i+palette))
+
+def get_dirs() -> set[str]:
+    result = set()
+    for sample in CONFIG['samples'].values():
+        dirname = sample[:sample.rfind(os.path.sep)]
+        result.add(dirname)
+    return result
+
 def quit():
     # allow user to save changes
     choice = ''
@@ -127,7 +139,38 @@ def menu_samples():
         pass
 
 def menu_colors():
-    pass
+    opts = {1: "empty slots", 2: "pressed buttons"}
+    curr = 3
+    for d in get_dirs():
+        opts[curr] = d
+        curr += 1
+    choice = 1
+    while True:
+        print("Choose a category to assign colors to")
+        choice = prompt(opts, "back")
+
+        if choice <= 0:
+            break
+
+        print("Select a color on your controller, or press an arrow button to switch between palettes 1 and 2")
+        palette = 0
+        display_palette(palette)
+
+        while True:
+            message = midiport.receive()
+            if message.is_cc():
+                palette = (palette + 1) % 2
+                display_palette(palette)
+            elif message.type == 'note_on' and message.velocity > 0:
+                color = message.note - 36 + palette * 64
+                if choice == 1:
+                    CONFIG['empty_color'] = color
+                elif choice == 2:
+                    CONFIG['hit_color'] = color
+                else:
+                    CONFIG['dir_colors'][opts[choice]] = color
+                break
+
 
 if __name__ == "__main__":
     print('\n\n\n\n')
