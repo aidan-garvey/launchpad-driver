@@ -53,11 +53,14 @@ class SampleStream:
         self.samples[num] = wave.open('samples/' + filename, 'rb')
 
     # add the given sample to the ones being played in the callback function
-    def play(self, num):
+    def play(self, num) -> bool:
         sf = self.samples.get(num)
         if sf is not None:
             sf.rewind()
             self.queue.add(sf)
+            return True
+
+        return False
 
     # Called by self.stream whenever more frames of audio output are needed.
     # It combines all samples currently being played by adding their waveform

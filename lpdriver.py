@@ -73,7 +73,6 @@ class Driver:
         print('\nPress CTRL+C to quit')
 
         self.stream = SampleStream(self.audio, self.audiodev)
-        self.fx = FX(self.midiport, self.colormap)
 
         self.colormap = dict()
         self.fxmap = dict()
@@ -84,15 +83,18 @@ class Driver:
             self.colormap[note_val] = CONFIG['dir_colors'][sample_dir]
             self.fxmap[note_val] = CONFIG['dir_effects'].get(sample_dir)
             self.midiport.send(mido.Message('note_on', channel=CHANNEL, note=note_val, velocity=self.colormap[note_val]))
+            
+        self.fx = FX(self.midiport, self.colormap)
 
     def run(self):
         try:
             while True:
                 message = self.midiport.receive()
                 if message.type == 'note_on' and message.velocity > 0:
-                    self.stream.play(message.note)
+                    exists = self.stream.play(message.note)
                     self.midiport.send(mido.Message('note_on', channel=CHANNEL, note=message.note, velocity=HIT_COLOR))
-                    self.fx.trigger(self.fxmap[message.note])
+                    if exists: 
+                        self.fx.trigger(self.fxmap[message.note])
                 elif message.type == 'note_on':
                     self.midiport.send(mido.Message('note_on', channel=CHANNEL, note=message.note, velocity=self.colormap.get(message.note, EMPTY_COLOR)))
         except KeyboardInterrupt as kbdint:
