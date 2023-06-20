@@ -80,16 +80,15 @@ def cfg_midi_channel():
 
 def menu_samples():
     # initialize button colors, save a map of notes to samples (reverse of config)
-    note2sample = dict()
-    for path, note_val in CONFIG['samples'].items():
+    for note_val, path in CONFIG['samples'].items():
         sample_dir = path[:path.rfind(os.path.sep)]
-        note2sample[note_val] = path
-        midiport.send(mido.Message('note_on'), channel=CONFIG['midi_channel'], note=note_val, velocity=CONFIG['dir_colors'][sample_dir])
+        midiport.send(mido.Message('note_on', channel=CONFIG['midi_channel'], note=note_val, velocity=CONFIG['dir_colors'][sample_dir]))
 
     # let user assign samples
     while True:
         message = midiport.receive()
         if message.type == 'note_on' and message.velocity > 0:
+            notestr = str(message.note)
             midiport.send(mido.Message('note_on', channel=message.channel, note=message.note, velocity=12))
             opts = dict()
             curr = 1
@@ -97,7 +96,7 @@ def menu_samples():
                 for f in files:
                     opts[curr] = os.path.join(path[path.find(os.path.sep) + 1:], f)
                     curr += 1
-            choice = prompt(opts, f"use current ({note2sample.get(message.note, '(none)')})")
+            choice = prompt(opts, f"use current ({CONFIG['samples'].get(notestr, 'none')})")
             
             if choice > 0:
                 name = opts[choice]
@@ -105,7 +104,7 @@ def menu_samples():
 
                 print("Using", name, "from", dirname)
 
-                CONFIG['samples'][name] = message.note
+                CONFIG['samples'][notestr] = name
                 midiport.send(mido.Message('note_on', channel=message.channel, note=message.note, velocity=CONFIG['dir_colors'].get(dirname, 40)))
 
             print("Press a button on the controller to assign a sample, press one of the arrow buttons to go back")

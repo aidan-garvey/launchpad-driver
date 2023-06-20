@@ -5,8 +5,8 @@
     "empty_color":0,
     "hit_color":56,
     "samples": {
-        "rhythm/kick-1.wav":36,
-        "scratches/beat_up.wav":37
+        "36": "rhythm/kick-1.wav",
+        "37": "scratches/beat_up.wav"
     },
     "dir_colors": {
         "rhythm":9,
