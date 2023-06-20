@@ -159,7 +159,7 @@ def menu_colors():
 
         while True:
             message = midiport.receive()
-            if message.is_cc() and message.velocity > 0:
+            if message.is_cc() and message.control > 0:
                 palette = (palette + 1) % 2
                 display_palette(palette)
             elif message.type == 'note_on' and message.velocity > 0:
