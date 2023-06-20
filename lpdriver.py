@@ -118,5 +118,5 @@ if __name__ == "__main__":
     try:
         s.run()
     except Exception as e:
-        print(e)
+        print(f'Exception in __main__: {e}')
     s.shut_down()

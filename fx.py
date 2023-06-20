@@ -65,6 +65,10 @@ class FX:
             # timeout due to empty queue: try again
             except queue.Empty:
                 pass
-            # exception due to queue closed: terminate loop
+            # exception due to keyboard interrupt: terminate loop
+            except KeyboardInterrupt:
+                break
+            # other exception: print and terminate
             except Exception as e:
-                print(f'Error in FX.workerfn: {e}')
+                print(f'FX worker stopped due to: {e}')
+                break
