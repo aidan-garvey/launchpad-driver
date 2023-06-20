@@ -159,7 +159,7 @@ def menu_colors():
 
         while True:
             message = midiport.receive()
-            if message.is_cc() and message.control > 0:
+            if message.is_cc() and message.value > 0:
                 palette = (palette + 1) % 2
                 display_palette(palette)
             elif message.type == 'note_on' and message.velocity > 0:
@@ -171,8 +171,9 @@ def menu_colors():
                 else:
                     CONFIG['dir_colors'][opts[choice]] = color
                 break
+        
+        sysex_lightall(0)
     
-    sysex_lightall(0)
     # flush
     while midiport.poll() is not None:
         pass
