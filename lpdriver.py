@@ -70,7 +70,8 @@ class Driver:
         self.stream = SampleStream(self.audio, self.audiodev)
 
         self.colormap = dict()
-        for note_val, path in CONFIG['samples'].items():
+        for notestr, path in CONFIG['samples'].items():
+            note_val = int(notestr)
             sample_dir = path[:path.rfind(os.path.sep)]
             self.stream.add(note_val, path)
             self.colormap[note_val] = CONFIG['dir_colors'][sample_dir]

@@ -82,7 +82,7 @@ def menu_samples():
     # initialize button colors, save a map of notes to samples (reverse of config)
     for note_val, path in CONFIG['samples'].items():
         sample_dir = path[:path.rfind(os.path.sep)]
-        midiport.send(mido.Message('note_on', channel=CONFIG['midi_channel'], note=note_val, velocity=CONFIG['dir_colors'][sample_dir]))
+        midiport.send(mido.Message('note_on', channel=CONFIG['midi_channel'], note=int(note_val), velocity=CONFIG['dir_colors'][sample_dir]))
 
     # let user assign samples
     while True:
