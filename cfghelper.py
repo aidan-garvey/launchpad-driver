@@ -10,9 +10,9 @@ CONFIG: dict = json.loads(open('config.json', 'r').read())
 
 midiport = None
 
-def clear_all():
+def clear_all(color = CONFIG.get('empty_color', 0)):
     for i in range(64):
-        midiport.send(mido.Message('note_on', channel=CONFIG['midi_channel'], note=i+36, velocity=CONFIG['empty_color']))
+        midiport.send(mido.Message('note_on', channel=CONFIG['midi_channel'], note=i+36, velocity=color))
 
 def display_palette(palette: int):
     palette *= 64
@@ -37,7 +37,7 @@ def quit():
     
     if midiport is not None:
         # clear buttons
-        clear_all()
+        clear_all(0)
 
         # flush MIDI inputs
         while midiport.poll() is not None:
