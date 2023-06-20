@@ -31,8 +31,8 @@ class FX:
             # visual effects aren't as important as sound, so if we can't add the effect just abort
             try:
                 self.jobs.put(effect)
-            except:
-                pass
+            except Exception as e:
+                print(f'Error in FX.trigger: {e}')
     
     def close(self):
         self.jobs.close()
@@ -51,7 +51,7 @@ class FX:
         time.sleep(0.04)
         self.port.send(self.sysex_lightall(self.empty_color))
         for n, v in self.colormap.items():
-            self.port.send('note_on', channel=self.channel, note=n, velocity=v)
+            self.port.send(mido.Message('note_on', channel=self.channel, note=n, velocity=v))
 
     def handle_job(self, job):
         if job == 'strobe':
@@ -66,7 +66,5 @@ class FX:
             except queue.Empty:
                 pass
             # exception due to queue closed: terminate loop
-            except:
-                break
-
-
+            except Exception as e:
+                print(f'Error in FX.workerfn: {e}')
