@@ -12,7 +12,7 @@ midiport = None
 
 def clear_all():
     for i in range(64):
-        midiport.send(mido.Message('note_on', channel=CONFIG['midi_channel'], note=i+36, velocity=0))
+        midiport.send(mido.Message('note_on', channel=CONFIG['midi_channel'], note=i+36, velocity=CONFIG['empty_color']))
 
 def display_palette(palette: int):
     palette *= 64
