@@ -99,7 +99,7 @@ def menu_samples():
                     opts[curr] = os.path.join(path[path.find(os.path.sep) + 1:], f)
                     curr += 1
             choice = prompt(opts, f"use current ({CONFIG['samples'].get(notestr, 'none')})")
-            
+
             if choice > 0:
                 name = opts[choice]
                 dirname = name[:name.rfind(os.path.sep)]
@@ -107,6 +107,14 @@ def menu_samples():
                 print("Using", name, "from", dirname)
 
                 CONFIG['samples'][notestr] = name
+                midiport.send(mido.Message('note_on', channel=message.channel, note=message.note, velocity=CONFIG['dir_colors'].get(dirname, 40)))
+
+            elif CONFIG['samples'].get(notestr, None) is None:
+                midiport.send(mido.Message('note_on', channel=message.channel, note=message.note, velocity=0))
+
+            else:
+                name = CONFIG['samples'][notestr]
+                dirname = name[:name.rfind(os.path.sep)]
                 midiport.send(mido.Message('note_on', channel=message.channel, note=message.note, velocity=CONFIG['dir_colors'].get(dirname, 40)))
 
             print("Press a button on the controller to assign a sample, press one of the arrow buttons to go back")
