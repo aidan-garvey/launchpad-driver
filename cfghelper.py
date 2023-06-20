@@ -33,7 +33,7 @@ def quit():
         choice = input("Save changes? [Y/N]").upper()[:1]
     if choice == 'Y':
         f = open('config.json', 'w')
-        f.write(json.dumps(CONFIG))
+        f.write(json.dumps(CONFIG, indent=4, sort_keys=True))
     
     if midiport is not None:
         # clear buttons
