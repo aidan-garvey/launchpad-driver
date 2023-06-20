@@ -173,6 +173,9 @@ def menu_colors():
                 break
     
     sysex_lightall(0)
+    # flush
+    while midiport.poll() is not None:
+        pass
 
 
 if __name__ == "__main__":
@@ -191,6 +194,10 @@ if __name__ == "__main__":
         cfg_midi_dev()
 
     midiport = mido.open_ioport(CONFIG['midi_device'])
+
+    # flush
+    while midiport.poll() is not None:
+        pass
 
     choice = prompt({1: f'use saved audio device ({CONFIG["audio_device"]})',
                      2: 'choose a different audio device'}, "exit")
