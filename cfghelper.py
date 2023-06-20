@@ -145,6 +145,7 @@ def menu_colors():
         opts[curr] = d
         curr += 1
     choice = 1
+    
     while True:
         print("Choose a category to assign colors to")
         choice = prompt(opts, "back")
@@ -158,7 +159,7 @@ def menu_colors():
 
         while True:
             message = midiport.receive()
-            if message.is_cc():
+            if message.is_cc() and message.velocity > 0:
                 palette = (palette + 1) % 2
                 display_palette(palette)
             elif message.type == 'note_on' and message.velocity > 0:
@@ -170,6 +171,8 @@ def menu_colors():
                 else:
                     CONFIG['dir_colors'][opts[choice]] = color
                 break
+    
+    sysex_lightall(0)
 
 
 if __name__ == "__main__":
