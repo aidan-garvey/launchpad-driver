@@ -8,6 +8,9 @@
         "scratches": 87,
         "t8": 9
     },
+    "dir_effects": {
+        "noises": "strobe"
+    },
     "empty_color": 104,
     "hit_color": 95,
     "midi_channel": 5,
