@@ -205,6 +205,10 @@ if __name__ == "__main__":
     while midiport.poll() is not None:
         pass
 
+    # put in user 1 / drum rack mode
+    layoutmsg = mido.Message.from_bytes([0xF0, 0x00, 0x20, 0x29, 0x02, 0x18, 0x22, 0x01, 0xF7])
+    midiport.send(layoutmsg)
+
     choice = prompt({1: f'use saved audio device ({CONFIG["audio_device"]})',
                      2: 'choose a different audio device'}, "exit")
 
