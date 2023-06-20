@@ -5,6 +5,7 @@ import mido
 import multiprocessing as mp
 import queue
 import time
+import json
 
 class FX:
     port: mido.ports.BaseIOPort
@@ -48,9 +49,9 @@ class FX:
         time.sleep(0.04)
         self.port.send(self.sysex_lightall(3))
         time.sleep(0.04)
-        self.port.send(self.sysex_lightall(0))
-        for i in range(64):
-            self.port.send('note_on', channel=self.channel, note=i+36, velocity=self.colormap.get(i+36, empty_color))
+        self.port.send(self.sysex_lightall(self.empty_color))
+        for n, v in self.colormap.items():
+            self.port.send('note_on', channel=self.channel, note=n, velocity=v)
 
     def handle_job(self, job):
         if job == 'strobe':
