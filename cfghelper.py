@@ -84,6 +84,8 @@ def menu_samples():
         sample_dir = path[:path.rfind(os.path.sep)]
         midiport.send(mido.Message('note_on', channel=CONFIG['midi_channel'], note=int(note_val), velocity=CONFIG['dir_colors'][sample_dir]))
 
+    print("Press a button on the controller to assign a sample, press one of the arrow buttons to go back")
+
     # let user assign samples
     while True:
         message = midiport.receive()
