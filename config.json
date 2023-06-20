@@ -1,1 +1,43 @@
-{"audio_device": "T-8", "midi_device": "Launchpad MK2:Launchpad MK2 MIDI 1 20:0", "midi_channel": 5, "empty_color": 104, "hit_color": 95, "samples": {"36": "rhythm/rimshot-2.wav", "37": "rhythm/hihat-1.wav", "64": "scratches/beat_up.wav", "65": "scratches/beat_down.wav", "66": "scratches/beat_up_2.wav", "67": "scratches/beat_down_2.wav", "40": "t8/bass-drum.wav", "41": "t8/snare.wav", "42": "t8/hand-clap.wav", "43": "t8/c-hihat.wav", "72": "t8/m-hihat.wav", "73": "t8/o-hihat.wav", "44": "scratches/beat_up.wav", "45": "scratches/beat_down.wav", "46": "scratches/beat_up_2.wav", "47": "scratches/beat_down_2.wav", "48": "epmd/d-.wav", "49": "epmd/d-d-.wav", "50": "epmd/down.wav", "51": "epmd/blackout.wav", "80": "epmd/mic.wav", "81": "epmd/rock.wav", "52": "noises/flash.wav", "53": "dafunk/dafunk_1.wav", "54": "dafunk/dafunk_2.wav", "55": "dafunk/dafunk_combined.wav"}, "dir_colors": {"rhythm": 60, "scratches": 87, "t8": 9, "epmd": 72, "noises": 3, "dafunk": 72}}
+{
+    "audio_device": "T-8",
+    "dir_colors": {
+        "dafunk": 72,
+        "epmd": 72,
+        "noises": 3,
+        "rhythm": 60,
+        "scratches": 87,
+        "t8": 9
+    },
+    "empty_color": 104,
+    "hit_color": 95,
+    "midi_channel": 5,
+    "midi_device": "Launchpad MK2:Launchpad MK2 MIDI 1 20:0",
+    "samples": {
+        "36": "rhythm/rimshot-2.wav",
+        "37": "rhythm/hihat-1.wav",
+        "40": "t8/bass-drum.wav",
+        "41": "t8/snare.wav",
+        "42": "t8/hand-clap.wav",
+        "43": "t8/c-hihat.wav",
+        "44": "scratches/beat_up.wav",
+        "45": "scratches/beat_down.wav",
+        "46": "scratches/beat_up_2.wav",
+        "47": "scratches/beat_down_2.wav",
+        "48": "epmd/d-.wav",
+        "49": "epmd/d-d-.wav",
+        "50": "epmd/down.wav",
+        "51": "epmd/blackout.wav",
+        "52": "noises/flash.wav",
+        "53": "dafunk/dafunk_1.wav",
+        "54": "dafunk/dafunk_2.wav",
+        "55": "dafunk/dafunk_combined.wav",
+        "64": "scratches/beat_up.wav",
+        "65": "scratches/beat_down.wav",
+        "66": "scratches/beat_up_2.wav",
+        "67": "scratches/beat_down_2.wav",
+        "72": "t8/m-hihat.wav",
+        "73": "t8/o-hihat.wav",
+        "80": "epmd/mic.wav",
+        "81": "epmd/rock.wav"
+    }
+}
