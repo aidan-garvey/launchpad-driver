@@ -95,10 +95,14 @@ def cfg_midi_channel():
 def menu_samples():
     clear_all()
 
-    # initialize button colors, save a map of notes to samples (reverse of config)
+    # initialize button colors
     for note_val, path in CONFIG['samples'].items():
         sample_dir = path[:path.rfind(os.path.sep)]
         midiport.send(mido.Message('note_on', channel=CONFIG['midi_channel'], note=int(note_val), velocity=CONFIG['dir_colors'][sample_dir]))
+
+    # flush
+    while midiport.poll() is not None:
+        pass
 
     print("Press a button on the controller to assign a sample, press one of the arrow buttons to go back")
 
@@ -151,6 +155,10 @@ def menu_colors():
         opts[curr] = d
         curr += 1
     choice = 1
+
+    # flush
+    while midiport.poll() is not None:
+        pass
     
     while True:
         print("Choose a category to assign colors to")
@@ -184,6 +192,34 @@ def menu_colors():
     while midiport.poll() is not None:
         pass
 
+def menu_clear_samples():
+    clear_all()
+
+    # initialize button colors
+    for note_val, path in CONFIG['samples'].items():
+        sample_dir = path[:path.rfind(os.path.sep)]
+        midiport.send(mido.Message('note_on', channel=CONFIG['midi_channel'], note=int(note_val), velocity=CONFIG['dir_colors'][sample_dir]))
+
+    # flush
+    while midiport.poll() is not None:
+        pass
+
+    print("Press a button on the controller to clear a sample, press one of the arrow buttons to go back")
+
+    while True:
+        message = midiport.receive()
+        
+        if message.type == 'note_on' and message.velocity > 0:
+            notestr = str(message.note)
+            CONFIG['samples'].pop(notestr, None)
+            midiport.send(mido.Message('note_on', channel=message.channel, note=message.note, velocity=CONFIG['empty_color']))
+        
+        elif message.is_cc():
+            break
+
+    # flush
+    while midiport.poll() is not None:
+        pass
 
 if __name__ == "__main__":
     print('\n\n\n\n')
@@ -226,11 +262,13 @@ if __name__ == "__main__":
         cfg_midi_channel()
 
     while choice != 0:
-        choice = prompt({1: 'assign samples', 2: 'assign colors'}, "exit")
+        choice = prompt({1: 'assign samples', 2: 'assign colors', 3: 'unassign samples'}, "exit")
         if choice == 1:
             menu_samples()
         elif choice == 2:
             menu_colors()
+        elif choice == 3:
+            menu_clear_samples()
         clear_all()
     
     quit()
